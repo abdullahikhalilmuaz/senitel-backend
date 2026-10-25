@@ -15,29 +15,27 @@ const modelRoutes = require("./routes/modelRoutes");
 
 const app = express();
 
-// Middleware
+// 1. Security Headers
 app.use(helmet());
 
-// Dynamic CORS setup for local and production
+// 2. Dynamic CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:3000",
-  process.env.CLIENT_URL || "https://cau-system.onrender.com", // This will be your Render frontend URL
+  "https://cau-system.onrender.com", // Your frontend URL
+  process.env.CLIENT_URL,
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
       if (!origin) return callback(null, true);
-
-      if (
-        allowedOrigins.indexOf(origin) !== -1 ||
-        process.env.NODE_ENV === "development"
-      ) {
+      if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // Pass false instead of an Error to reject the request cleanly
+        // without triggering a 500 Internal Server Error
+        console.log("Blocked by CORS:", origin);
+        callback(null, false);
       }
     },
     credentials: true,

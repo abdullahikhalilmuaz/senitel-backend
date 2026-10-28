@@ -1,15 +1,16 @@
-module.exports = {
+module.exports = Object.freeze({
+  version: 'v2',
   riskThresholds: {
-    low: 0.4,    // Below this is low risk
-    medium: 0.7  // Between low and medium is medium, above is high
-  },
-  actions: {
-    LOW: 'continue',
-    MEDIUM: 'step-up',
-    HIGH: 'restrict'
+    // These are initial demo-policy thresholds. Calibrate against consented,
+    // representative sessions before using this system for real access control.
+    medium: 0.4,
+    high: 0.7,
   },
   session: {
-    maxIdleMs: 30 * 60 * 1000, // 30 mins
-    maxAgeMs: 24 * 60 * 60 * 1000 // 24 hours
-  }
-};
+    maxIdleMs: 30 * 60 * 1000,
+    maxAgeMs: 24 * 60 * 60 * 1000,
+  },
+  baseline: {
+    minimumSamples: 20,
+  },
+});
